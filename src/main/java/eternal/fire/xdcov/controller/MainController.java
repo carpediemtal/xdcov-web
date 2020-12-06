@@ -40,7 +40,9 @@ public class MainController {
                     break;
                 }
 
+
                 userService.addUser(id, password);
+                redirectAttributes.addFlashAttribute("info", "提交成功！");
             }
             case "cancel" -> {
                 if (userService.deleteUser(id, password) != 0) {
