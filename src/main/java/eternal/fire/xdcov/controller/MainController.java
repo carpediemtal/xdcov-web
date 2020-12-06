@@ -40,7 +40,6 @@ public class MainController {
                     break;
                 }
 
-
                 userService.addUser(id, password);
                 redirectAttributes.addFlashAttribute("info", "提交成功！");
             }

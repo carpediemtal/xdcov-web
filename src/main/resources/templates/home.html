@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>XDCOV</title>
+    <link rel="shortcut icon" th:href="@{/favicon.ico}"/>
+    <link rel="bookmark" th:href="@{/favicon.ico}"/>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"
           integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
@@ -62,9 +64,10 @@
         methods: {
             showInfo() {
                 alert("1. 缓存隔一段时间就会失效，因此服务器需要暂时记录您的数据\n" +
-                    "2. 默认设置为每隔一小时填报一次，所以可能会有一小段时间晨午晚检处于没有填报的状态")
+                    "2. 默认设置为每隔一小时填报一次，所以可能会有一小段时间晨午晚检处于没有填报的状态\n" +
+                    "3. https://github.com/carpediemtal/xdcov-web");
             }
         }
-    })
+    });
 </script>
 </html>
