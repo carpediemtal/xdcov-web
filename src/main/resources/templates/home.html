@@ -17,6 +17,7 @@
             crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css"
           integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <style>
         body {
             background-image: url(./xd.jpg);
@@ -25,7 +26,7 @@
     </style>
 </head>
 <body>
-<div class="container" style="max-width: 700px">
+<div class="container" style="max-width: 700px" id="app">
 
     <div class="row">
         <div class="col-12 col-md" style="margin: 30px">
@@ -41,13 +42,14 @@
                 </div>
                 <div class="form-group">
                     <button name="action" value="submit" type="submit" class="btn btn-outline-primary">确认自动填报</button>
-                    <button name="action" value="cancel" type="submit" class="btn btn-outline-danger" style="margin-left: 10px">
+                    <button name="action" value="cancel" type="submit" class="btn btn-outline-danger"
+                            style="margin-left: 10px">
                         取消自动填报
                     </button>
                     <span class="text-primary font-weight-bold font-italic" th:if="${info ne null}" th:text="${info}">提交后的信息</span>
                 </div>
                 <div class="form-group">
-                    <a href="/" class="text-info">Help?</a>
+                    <a class="text-info" v-on:click="showInfo">Help?</a>
                 </div>
             </form>
         </div>
@@ -55,14 +57,14 @@
 </div>
 </body>
 <script>
-    /*function confirm() {
-        document.form.action = "/submit";
-        document.form.submit();
-    }
-
-    function cancel() {
-        document.form.action = "/cancel";
-        document.form.submit();
-    }*/
+    new Vue({
+        el: '#app',
+        methods: {
+            showInfo() {
+                alert("1. 缓存隔一段时间就会失效，因此服务器需要暂时记录您的数据\n" +
+                    "2. 默认设置为每隔一小时填报一次，所以可能会有一小段时间晨午晚检处于没有填报的状态")
+            }
+        }
+    })
 </script>
 </html>
