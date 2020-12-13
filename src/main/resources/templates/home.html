@@ -19,6 +19,9 @@
             crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css"
           integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/jsencrypt@3.0.0-rc.1/bin/jsencrypt.js"
+            integrity="sha256-LPq6JjUcx8tPxyR4owz9280cfG70ZRA7g5LlWUgaTo4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@latest/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <style th:inline="text">
         body {
@@ -33,22 +36,27 @@
     <div class="row">
         <div class="col-12 col-md" style="margin: 40px">
             <h3 class="text-info text-center">西电晨午晚检自动填报工具</h3>
-            <form method="post" name="form" action="/submit">
+            <form method="post" name="form" action="/submit" v-on:submit.prevent="upload">
                 <div class="form-group">
                     <label for="id">学号</label>
-                    <input id="id" name="id" type="text" class="form-control" placeholder="id">
+                    <input id="id" name="id" type="text" class="form-control" placeholder="id" v-model="id">
                 </div>
                 <div class="form-group">
                     <label for="password">密码</label>
-                    <input id="password" name="password" type="password" class="form-control" placeholder="Password">
+                    <input id="password" name="password" type="password" class="form-control" placeholder="Password"
+                           v-model="password">
                 </div>
                 <div class="form-group">
-                    <button name="action" value="submit" type="submit" class="btn btn-outline-primary">确认自动填报</button>
+                    <button name="action" value="submit" type="submit" class="btn btn-outline-primary"
+                            v-on:click="setSubmit">确认自动填报
+                    </button>
                     <button name="action" value="cancel" type="submit" class="btn btn-outline-danger"
+                            v-on:click="setCancel"
                             style="margin-left: 10px">
                         取消自动填报
                     </button>
-                    <span class="text-primary font-weight-bold font-italic" th:if="${info ne null}" th:text="${info}">提交后的信息</span>
+<!--                    <span class="text-primary font-weight-bold font-italic" th:if="${info ne null}" th:text="${info}">提交后的信息</span>-->
+                    <span class="text-primary font-weight-bold font-italic" v-if="flag">{{ response }}</span>
                 </div>
                 <div class="form-group">
                     <a class="text-info" v-on:click="showInfo">Help?</a>
@@ -63,21 +71,58 @@
                 <p>
                     <a class="font-weight-bold  text-dark">Copyright&copy;2020</a> -
                     <a target="_blank" href="https://linjinming.gitee.io/"><i class="fa fa-leaf"></i> Blog</a> -
-                    <a target="_blank" href="https://github.com/carpediemtal/xdcov-web"><i class="fa fa-github"></i> Github</a>
+                    <a target="_blank" href="https://github.com/carpediemtal/xdcov-web"><i class="fa fa-github"></i>
+                        Github</a>
                 </p>
             </div>
         </div>
     </footer>
 </div>
 </body>
-<script>
+<script th:inline="javascript">
+    const publicKey = [[${publicKey}]];
+
     new Vue({
         el: '#app',
+        data: {
+            id: '',
+            password: '',
+            action: '',
+            flag: false,
+            response: ''
+        },
         methods: {
             showInfo() {
                 alert("1. 缓存隔一段时间就会失效，因此服务器需要暂时记录您的数据\n" +
                     "2. 默认设置为每隔一小时填报一次，所以可能会有一小段时间晨午晚检处于没有填报的状态\n" +
-                    "3. https://github.com/carpediemtal/xdcov-web");
+                    "3. 使用RSA非对称算法对您的数据进行加密，确保隐私不被窃取");
+            },
+            upload() {
+                const encryptor = new JSEncrypt();
+                encryptor.setPublicKey(publicKey);
+
+                const formData = new FormData();
+                formData.append("id", encryptor.encrypt(this.id));
+                formData.append("password", encryptor.encrypt(this.password));
+                formData.append("action", this.action);
+                axios({
+                    method: "post",
+                    url: "/submit",
+                    headers: {
+                        "Content-Type": "multipart/form-data"
+                    },
+                    data: formData
+                }).then((res) => {
+                    this.flag = true;
+                    this.response = res.data;
+                    console.log(res);
+                });
+            },
+            setSubmit() {
+                this.action = 'submit';
+            },
+            setCancel() {
+                this.action = 'cancel';
             }
         }
     });
