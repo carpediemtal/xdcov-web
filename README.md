@@ -12,4 +12,4 @@ Web版点击[这里](http://47.98.252.1:8080)访问
 
 
 ### 思路
-![xdcov-structure.png](http://ww1.sinaimg.cn/large/005VT09Qly1gll3a64g32j30l50e6dic.jpg)
+![xdcov-structure.png](http://ww1.sinaimg.cn/large/005VT09Qly1glmh8i5x0bj30x40fwjuu.jpg)
