@@ -62,7 +62,7 @@ public class Covid {
             } else {
                 logger.info("id:{},password:{},上报失败：{}", id, password, message.getM());
             }
-        } catch (IOException | InterruptedException | URISyntaxException e) {
+        } catch (IOException | InterruptedException | URISyntaxException | RuntimeException e) {
             e.printStackTrace();
         }
     }
@@ -83,7 +83,7 @@ public class Covid {
             }
             return ans.toString();
         }
-        throw new RuntimeException("登录失败，请检查用户名和密码是否正确");
+        throw new RuntimeException("登录失败，请检查用户名和密码是否正确。ID：" + id + ", Password:" + "password");
     }
 
     private String purifyCookie(String cookie) {
@@ -104,7 +104,7 @@ public class Covid {
     }
 
     // 是否可以登录成功
-    public static boolean test(String id, String password){
+    public static boolean test(String id, String password) {
         try {
             String body = String.format("username=%s&password=%s", id, password);
             HttpRequest request = HttpRequest.newBuilder(new URI(LOGIN_URL))
